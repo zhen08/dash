@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # coding=utf-8
 # ^^^^^^^^^^^^ TODO remove when supporting only Python3
 # Copyright (c) 2016 The Bitcoin Core developers
