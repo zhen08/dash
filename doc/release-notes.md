@@ -31,7 +31,66 @@ Example item
 
 Example text.
 
-0.12.1 Change log
+
+dash-cli: arguments privacy
+--------------------------------
+
+The RPC command line client gained a new argument, `-stdin`
+to read extra arguments from standard input, one per line until EOF/Ctrl-D.
+For example:
+
+    $ echo -e "mysecretcode\n120" | src/dash-cli -stdin walletpassphrase
+
+It is recommended to use this for sensitive information such as wallet
+passphrases, as command-line arguments can usually be read from the process
+table by any user on the system.
+
+RPC low-level changes
+----------------------
+
+- `gettxoutsetinfo` UTXO hash (`hash_serialized`) has changed. There was a divergence between
+  32-bit and 64-bit platforms, and the txids were missing in the hashed data. This has been
+  fixed, but this means that the output will be different than from previous versions.
+
+- Full UTF-8 support in the RPC API. Non-ASCII characters in, for example,
+  wallet labels have always been malformed because they weren't taken into account
+  properly in JSON RPC processing. This is no longer the case. This also affects
+  the GUI debug console.
+
+C++11 and Python 3
+-------------------
+
+Various code modernizations have been done. The Dash Core code base has
+started using C++11. This means that a C++11-capable compiler is now needed for
+building. Effectively this means GCC 4.7 or higher, or Clang 3.3 or higher.
+
+When cross-compiling for a target that doesn't have C++11 libraries, configure with
+`./configure --enable-glibc-back-compat ... LDFLAGS=-static-libstdc++`.
+
+For running the functional tests in `qa/rpc-tests`, Python3.4 or higher is now
+required.
+
+Linux ARM builds
+------------------
+
+Due to popular request, Linux ARM builds have been added to the uploaded
+executables.
+
+The following extra files can be found in the download directory or torrent:
+
+- `dashcore-${VERSION}-arm-linux-gnueabihf.tar.gz`: Linux binaries for the most
+  common 32-bit ARM architecture.
+- `dashcore-${VERSION}-aarch64-linux-gnu.tar.gz`: Linux binaries for the most
+  common 64-bit ARM architecture.
+
+ARM builds are still experimental. If you have problems on a certain device or
+Linux distribution combination please report them on the bug tracker, it may be
+possible to resolve them.
+
+Note that Android is not considered ARM Linux in this context. The executables
+are not expected to work out of the box on Android.
+
+0.12.3 Change log
 =================
 
 Detailed release notes follow. This overview includes changes that affect
