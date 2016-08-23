@@ -59,6 +59,9 @@ fi
 AC_PROG_OBJCXX
 ])
 
+dnl Check if -latomic is required for <std::atomic>
+CHECK_ATOMIC
+
 dnl Libtool init checks.
 LT_INIT([pic-only])
 
