@@ -31,45 +31,6 @@ Example item
 
 Example text.
 
-
-dash-cli: arguments privacy
---------------------------------
-
-The RPC command line client gained a new argument, `-stdin`
-to read extra arguments from standard input, one per line until EOF/Ctrl-D.
-For example:
-
-    $ echo -e "mysecretcode\n120" | src/dash-cli -stdin walletpassphrase
-
-It is recommended to use this for sensitive information such as wallet
-passphrases, as command-line arguments can usually be read from the process
-table by any user on the system.
-
-RPC low-level changes
-----------------------
-
-- `gettxoutsetinfo` UTXO hash (`hash_serialized`) has changed. There was a divergence between
-  32-bit and 64-bit platforms, and the txids were missing in the hashed data. This has been
-  fixed, but this means that the output will be different than from previous versions.
-
-- Full UTF-8 support in the RPC API. Non-ASCII characters in, for example,
-  wallet labels have always been malformed because they weren't taken into account
-  properly in JSON RPC processing. This is no longer the case. This also affects
-  the GUI debug console.
-
-C++11 and Python 3
--------------------
-
-Various code modernizations have been done. The Dash Core code base has
-started using C++11. This means that a C++11-capable compiler is now needed for
-building. Effectively this means GCC 4.7 or higher, or Clang 3.3 or higher.
-
-When cross-compiling for a target that doesn't have C++11 libraries, configure with
-`./configure --enable-glibc-back-compat ... LDFLAGS=-static-libstdc++`.
-
-For running the functional tests in `qa/rpc-tests`, Python3.4 or higher is now
-required.
-
 Linux ARM builds
 ------------------
 
