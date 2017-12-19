@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # Copyright (c) 2014-2015 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -36,24 +36,24 @@ class TxIndexTest(BitcoinTestFramework):
         self.sync_all()
 
     def run_test(self):
-        print "Mining blocks..."
+        print("Mining blocks...")
         self.nodes[0].generate(105)
         self.sync_all()
 
         chain_height = self.nodes[1].getblockcount()
         assert_equal(chain_height, 105)
 
-        print "Testing transaction index..."
+        print("Testing transaction index...")
 
         privkey = "cU4zhap7nPJAWeMFu4j6jLrfPmqakDAzy8zn8Fhb3oEevdm4e5Lc"
         address = "yeMpGzMj3rhtnz48XsfpB8itPHhHtgxLc3"
-        addressHash = "C5E4FB9171C22409809A3E8047A29C83886E325D".decode("hex")
+        addressHash = bytes.fromhex("C5E4FB9171C22409809A3E8047A29C83886E325D")
         scriptPubKey = CScript([OP_DUP, OP_HASH160, addressHash, OP_EQUALVERIFY, OP_CHECKSIG])
         unspent = self.nodes[0].listunspent()
         tx = CTransaction()
-        amount = unspent[0]["amount"] * 100000000
+        amount = unspent[0]["amount"] * COIN
         tx.vin = [CTxIn(COutPoint(int(unspent[0]["txid"], 16), unspent[0]["vout"]))]
-        tx.vout = [CTxOut(amount, scriptPubKey)]
+        tx.vout = [CTxOut(int(amount), scriptPubKey)]
         tx.rehash()
 
         signed_tx = self.nodes[0].signrawtransaction(binascii.hexlify(tx.serialize()).decode("utf-8"))
@@ -63,10 +63,10 @@ class TxIndexTest(BitcoinTestFramework):
 
         # Check verbose raw transaction results
         verbose = self.nodes[3].getrawtransaction(unspent[0]["txid"], 1)
-        assert_equal(verbose["vout"][0]["valueSat"], 5000000000);
-        assert_equal(verbose["vout"][0]["value"], 50);
+        assert_equal(verbose["vout"][0]["valueSat"], 50000000000);
+        assert_equal(verbose["vout"][0]["value"], 500);
 
-        print "Passed\n"
+        print("Passed\n")
 
 
 if __name__ == '__main__':
