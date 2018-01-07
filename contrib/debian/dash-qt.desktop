@@ -1,12 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Dash
-Comment=Dash P2P Cryptocurrency
-Comment[fr]=Dash, monnaie virtuelle cryptographique pair à pair
-Comment[tr]=Dash, eşten eşe kriptografik sanal para birimi
-Exec=dash-qt %u
+Name=Gust
+Comment=Gust P2P Cryptocurrency
+Comment[fr]=Gust, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Gust, eşten eşe kriptografik sanal para birimi
+Exec=gust-qt %u
 Terminal=false
 Type=Application
-Icon=dash128
-MimeType=x-scheme-handler/dash;
+Icon=gust128
+MimeType=x-scheme-handler/gust;
 Categories=Office;Finance;

@@ -1,11 +1,11 @@
 Sample configuration files for:
 
-SystemD: dashd.service
-Upstart: dashd.conf
-OpenRC:  dashd.openrc
-         dashd.openrcconf
-CentOS:  dashd.init
-OS X:    org.dash.dashd.plist
+SystemD: gustd.service
+Upstart: gustd.conf
+OpenRC:  gustd.openrc
+         gustd.openrcconf
+CentOS:  gustd.init
+OS X:    org.gust.gustd.plist
 
 have been made available to assist packagers in creating node packages here.
 

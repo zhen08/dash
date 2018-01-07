@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2014-2016 The Bitcoin Core developers
-# Copyright (c) 2014-2017 The Dash Core developers
+# Copyright (c) 2014-2017 The Gust Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -171,7 +171,7 @@ def initialize_datadir(dirname, n):
     if not os.path.isdir(datadir):
         os.makedirs(datadir)
     rpc_u, rpc_p = rpc_auth_pair(n)
-    with open(os.path.join(datadir, "dash.conf"), 'w') as f:
+    with open(os.path.join(datadir, "gust.conf"), 'w') as f:
         f.write("regtest=1\n")
         f.write("rpcuser=" + rpc_u + "\n")
         f.write("rpcpassword=" + rpc_p + "\n")
@@ -189,12 +189,12 @@ def rpc_url(i, rpchost=None):
 
 def wait_for_bitcoind_start(process, url, i):
     '''
-    Wait for dashd to start. This means that RPC is accessible and fully initialized.
-    Raise an exception if dashd exits during initialization.
+    Wait for gustd to start. This means that RPC is accessible and fully initialized.
+    Raise an exception if gustd exits during initialization.
     '''
     while True:
         if process.poll() is not None:
-            raise Exception('dashd exited with status %i during initialization' % process.returncode)
+            raise Exception('gustd exited with status %i during initialization' % process.returncode)
         try:
             rpc = get_rpc_proxy(url, i)
             blocks = rpc.getblockcount()
@@ -227,15 +227,15 @@ def initialize_chain(test_dir, num_nodes):
             if os.path.isdir(os.path.join("cache","node"+str(i))):
                 shutil.rmtree(os.path.join("cache","node"+str(i)))
 
-        # Create cache directories, run dashds:
+        # Create cache directories, run gustds:
         for i in range(MAX_NODES):
             datadir=initialize_datadir("cache", i)
-            args = [ os.getenv("DASHD", "dashd"), "-server", "-keypool=1", "-datadir="+datadir, "-discover=0" ]
+            args = [ os.getenv("GUSTD", "gustd"), "-server", "-keypool=1", "-datadir="+datadir, "-discover=0" ]
             if i > 0:
                 args.append("-connect=127.0.0.1:"+str(p2p_port(0)))
             bitcoind_processes[i] = subprocess.Popen(args)
             if os.getenv("PYTHON_DEBUG", ""):
-                print("initialize_chain: dashd started, waiting for RPC to come up")
+                print("initialize_chain: gustd started, waiting for RPC to come up")
             wait_for_bitcoind_start(bitcoind_processes[i], rpc_url(i), i)
             if os.getenv("PYTHON_DEBUG", ""):
                 print("initialize_chain: RPC succesfully started")
@@ -280,7 +280,7 @@ def initialize_chain(test_dir, num_nodes):
         from_dir = os.path.join("cache", "node"+str(i))
         to_dir = os.path.join(test_dir,  "node"+str(i))
         shutil.copytree(from_dir, to_dir)
-        initialize_datadir(test_dir, i) # Overwrite port/rpcport in dash.conf
+        initialize_datadir(test_dir, i) # Overwrite port/rpcport in gust.conf
 
 def initialize_chain_clean(test_dir, num_nodes):
     """
@@ -313,11 +313,11 @@ def _rpchost_to_args(rpchost):
 
 def start_node(i, dirname, extra_args=None, rpchost=None, timewait=None, binary=None, redirect_stderr=False):
     """
-    Start a dashd and return RPC connection to it
+    Start a gustd and return RPC connection to it
     """
     datadir = os.path.join(dirname, "node"+str(i))
     if binary is None:
-        binary = os.getenv("DASHD", "dashd")
+        binary = os.getenv("GUSTD", "gustd")
     # RPC tests still depend on free transactions
     args = [ binary, "-datadir="+datadir, "-server", "-keypool=1", "-discover=0", "-rest", "-blockprioritysize=50000", "-mocktime="+str(get_mocktime()) ]
     # Don't try auto backups (they fail a lot when running tests)
@@ -332,7 +332,7 @@ def start_node(i, dirname, extra_args=None, rpchost=None, timewait=None, binary=
 
     bitcoind_processes[i] = subprocess.Popen(args, stderr=stderr)
     if os.getenv("PYTHON_DEBUG", ""):
-        print("start_node: dashd started, waiting for RPC to come up")
+        print("start_node: gustd started, waiting for RPC to come up")
     url = rpc_url(i, rpchost)
     wait_for_bitcoind_start(bitcoind_processes[i], url, i)
     if os.getenv("PYTHON_DEBUG", ""):
@@ -346,7 +346,7 @@ def start_node(i, dirname, extra_args=None, rpchost=None, timewait=None, binary=
 
 def start_nodes(num_nodes, dirname, extra_args=None, rpchost=None, binary=None, redirect_stderr=False):
     """
-    Start multiple dashds, return RPC connections to them
+    Start multiple gustds, return RPC connections to them
     """
     if extra_args is None: extra_args = [ None for _ in range(num_nodes) ]
     if binary is None: binary = [ None for _ in range(num_nodes) ]
@@ -510,10 +510,10 @@ def assert_fee_amount(fee, tx_size, fee_per_kB):
     """Assert the fee was in range"""
     target_fee = tx_size * fee_per_kB / 1000
     if fee < target_fee:
-        raise AssertionError("Fee of %s DASH too low! (Should be %s DASH)"%(str(fee), str(target_fee)))
+        raise AssertionError("Fee of %s GUST too low! (Should be %s GUST)"%(str(fee), str(target_fee)))
     # allow the wallet's estimation to be at most 2 bytes off
     if fee > (tx_size + 2) * fee_per_kB / 1000:
-        raise AssertionError("Fee of %s DASH too high! (Should be %s DASH)"%(str(fee), str(target_fee)))
+        raise AssertionError("Fee of %s GUST too high! (Should be %s GUST)"%(str(fee), str(target_fee)))
 
 def assert_equal(thing1, thing2):
     if thing1 != thing2:

@@ -1,2 +1,2 @@
-usr/local/bin/dashd usr/bin
-usr/local/bin/dash-cli usr/bin
+usr/local/bin/gustd usr/bin
+usr/local/bin/gust-cli usr/bin

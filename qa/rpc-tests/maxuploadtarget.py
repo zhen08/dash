@@ -83,8 +83,8 @@ class MaxUploadTest(BitcoinTestFramework):
  
     def add_options(self, parser):
         parser.add_option("--testbinary", dest="testbinary",
-                          default=os.getenv("DASHD", "dashd"),
-                          help="dashd binary to test")
+                          default=os.getenv("GUSTD", "gustd"),
+                          help="gustd binary to test")
 
     def __init__(self):
         super().__init__()

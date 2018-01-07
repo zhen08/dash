@@ -1,15 +1,15 @@
 [Unit]
-Description=Dash's distributed currency daemon
+Description=Gust's distributed currency daemon
 After=network.target
 
 [Service]
-User=dashcore
-Group=dashcore
+User=gustcore
+Group=gustcore
 
 Type=forking
-PIDFile=/var/lib/dashd/dashd.pid
-ExecStart=/usr/bin/dashd -daemon -pid=/var/lib/dashd/dashd.pid \
--conf=/etc/dashcore/dash.conf -datadir=/var/lib/dashd -disablewallet
+PIDFile=/var/lib/gustd/gustd.pid
+ExecStart=/usr/bin/gustd -daemon -pid=/var/lib/gustd/gustd.pid \
+-conf=/etc/gustcore/gust.conf -datadir=/var/lib/gustd -disablewallet
 
 Restart=always
 PrivateTmp=true
